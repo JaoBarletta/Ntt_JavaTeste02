@@ -1,15 +1,16 @@
 package org.example.moviesapi.controler;
 
+
 import org.example.moviesapi.facades.UserFacade;
 
 import org.example.moviesapi.model.Dto.UserDto;
 import org.example.moviesapi.model.entity.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -22,43 +23,76 @@ public class UserController {
     @GetMapping(value = "/")
     public ResponseEntity<?> findAll()
     {
-        List<UserDto> response = userFacade.listUsers();
+        try{
+            List<UserDto> response = userFacade.listUsers();
+            return ResponseEntity.ok(response);
 
-        return response != null ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
+        }catch (Exception error){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error.getMessage());
+        }
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Optional<UserModel>> findById(@PathVariable Long id)
+    public ResponseEntity<?> findById(@PathVariable Long id)
     {
-        Optional<UserModel> response = userFacade.findById(id);
+try {
+    UserDto response = userFacade.findById(id);
+    return ResponseEntity.ok(response);
 
-        return response != null ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
+
+}catch (Exception error){
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error.getMessage());
+
+
+}
+
     }
 
 
 
     @PostMapping(value = "/save")
-    public ResponseEntity<UserModel> create(@RequestBody UserModel userModel)
+    public ResponseEntity<?> create(@RequestBody UserModel userModel)
     {
-        UserModel response = userFacade.create(userModel);
+        try
+        {
+            UserDto response = userFacade.create(userModel);
+            return ResponseEntity.ok(response);
+        }
+        catch (Exception error){
 
-        return response != null ? ResponseEntity.ok(response) : ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error.getMessage());
+        }
+
     }
 
     @PutMapping(value = "/update")
-    public ResponseEntity<UserModel> update(@RequestBody UserModel userModel)
+    public ResponseEntity<?> update(@RequestBody UserModel userModel)
     {
-        UserModel response = userFacade.update(userModel);
 
-        return response != null ? ResponseEntity.ok(response) : ResponseEntity.badRequest().build();
+        try{
+            UserDto response = userFacade.update(userModel);
+            return ResponseEntity.ok(response);
+
+        }catch (Exception error){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error.getMessage());
+
+        }
+
+
+
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deleteById(@PathVariable Long id) {
+    public boolean deleteById(@PathVariable Long id) {
+        try {
 
-        Boolean success = userFacade.delete(id);
+            Boolean success = userFacade.delete(id);
+            return true;
+        } catch (Exception error) {
+            return false;
 
-        return success ? ResponseEntity.noContent().build() : ResponseEntity.badRequest().build();
+
+        }
     }
 }
 

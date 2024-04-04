@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -47,24 +44,61 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public Optional<UserModel> findById(Long id) {
-        if (Objects.isNull(id)) { throw new RuntimeException("Parametro nao encontrado");}
-        return userService.findById(id);
+    public UserDto findById(Long id) {
+            UserModel user = userService.findById(id);
+            System.out.println(user);
+        if (user.getId() == null) { throw new NoSuchElementException("Não foi possivel encontrar o usuário com o id "+id);}
+            UserDto dto = new UserDto();
+            dto.setName(user.getName());
+            dto.setId(user.getId());
+            dto.setEmail(user.getEmail());
+            dto.setUsername(user.getUsername());
+
+
+            return dto;
+
+
     }
 
     @Override
-    public UserModel create(UserModel userModel) {
-        if (Objects.isNull(userModel)){throw new RuntimeException("Por Favor insira um parametro válido ");}
-        return userService.create(userModel);
-     }
+    public UserDto create(UserModel userModel) {
+        final UserModel user = userService.create(userModel);
+        UserDto dto = new UserDto();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        dto.setUsername(user.getUsername());
+
+
+        return dto;
+
+    }
 
     @Override
-    public UserModel update(UserModel userModel) {
-        return null;
+    public UserDto update(UserModel userModel) {
+
+        UserModel user = userService.findById(userModel.getId());
+        user.setEmail(userModel.getEmail());
+        user.setName(userModel.getName());
+        user.setUsername(userModel.getUsername());
+        user.setPassword(userModel.getPassword());
+
+        UserModel updatedUser = userService.update(user);
+
+        UserDto dto = new UserDto();
+        dto.setId(updatedUser.getId());
+        dto.setName(updatedUser.getName());
+        dto.setEmail(updatedUser.getEmail());
+        dto.setUsername(updatedUser.getUsername());
+
+
+        return dto;
     }
 
     @Override
     public Boolean delete(Long id) {
-        return null;
+        if (Objects.isNull(id)) { throw new RuntimeException("Parametro nao encontrado");}
+        userService.delete(id);
+        return true;
     }
 }

@@ -4,7 +4,6 @@ import org.example.moviesapi.model.entity.UserModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 
@@ -12,7 +11,7 @@ public interface UserService {
 
     List<UserModel> listUsers();
 
-    Optional<UserModel> findById(Long id);
+    UserModel findById(Long id);
 
     UserModel create(UserModel userModel);
 

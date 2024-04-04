@@ -3,9 +3,11 @@ package org.example.moviesapi.model.entity;
 import jakarta.persistence.*;
 import org.example.moviesapi.model.Dto.UserDto;
 
+import java.util.Optional;
+
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class UserModel {
 
     @Id
@@ -19,7 +21,7 @@ public class UserModel {
 
     private String username;
 
-    
+
 
     public UserModel() {
     }
@@ -70,4 +72,5 @@ public class UserModel {
     public void setUsername(String username) {
         this.username = username;
     }
+
 }

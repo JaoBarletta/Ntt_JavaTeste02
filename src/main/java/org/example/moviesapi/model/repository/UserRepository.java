@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<UserModel, Long> {
 
+
     UserModel findByName (String name);
 
     UserModel findByEmail (String email);
@@ -22,8 +23,8 @@ public interface UserRepository extends JpaRepository<UserModel, Long> {
     @Query("from UserModel u where u.email = :email") //JPQL
     UserModel busquePorEmail (@Param("email") String email);
 
-    @Query("SELECT u FROM UserModel u JOIN FETCH u.roles where u.username = :username")
-    UserModel findByUsernameFetchRoles(@Param("username") String username);
+//    @Query("SELECT u FROM UserModel u JOIN FETCH u.roles where u.username = :username")
+//    UserModel findByUsernameFetchRoles(@Param("username") String username);
 
     UserModel findByUsername(String username);
 
